@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_theme.dart';
 
 class QuantitySelector extends StatelessWidget {
@@ -15,22 +16,36 @@ class QuantitySelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _button(icon: Icons.remove, onTap: onDecrement, active: quantity > 1),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            '$quantity',
-            style: const TextStyle(
-              fontFamily: 'Poppins',
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
-            ),
+        Text(
+          'Portion',
+          style: GoogleFonts.poppins(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textPrimary,
           ),
         ),
-        _button(icon: Icons.add, onTap: onIncrement, active: true),
+        const SizedBox(height: 8),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _button(icon: Icons.remove, onTap: onDecrement, active: quantity > 1),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                '$quantity',
+                style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+            ),
+            _button(icon: Icons.add, onTap: onIncrement, active: true),
+          ],
+        ),
       ],
     );
   }
@@ -43,16 +58,16 @@ class QuantitySelector extends StatelessWidget {
     return GestureDetector(
       onTap: active ? onTap : null,
       child: Container(
-        width: 32,
-        height: 32,
+        width: 35,
+        height: 35,
         decoration: BoxDecoration(
-          color: active ? AppColors.primary : AppColors.surface,
-          borderRadius: BorderRadius.circular(8),
+          color: AppColors.primary,
+          borderRadius: BorderRadius.circular(10),
         ),
         child: Icon(
           icon,
-          size: 16,
-          color: active ? Colors.white : AppColors.textHint,
+          size: 20,
+          color: Colors.white,
         ),
       ),
     );

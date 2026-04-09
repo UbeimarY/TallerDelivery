@@ -22,12 +22,16 @@ class AppColors {
   static const Color divider = Color(0xFFEEEEEE);
   static const Color star = Color(0xFFFFC107);
   static const Color heart = Color(0xFFFF4D6D);
+  static const Color shadow = Color(0x1A000000);
 
   // Gradiente del splash
   static const LinearGradient splashGradient = LinearGradient(
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-    colors: [Color(0xFFE8293B), Color(0xFF9B1A27)],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [
+      Color(0xFFFF808C), // Lighter red/pink at top
+      Color(0xFFE8293B), // Darker red at bottom
+    ],
   );
 }
 

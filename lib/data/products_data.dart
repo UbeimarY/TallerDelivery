@@ -9,8 +9,7 @@ final List<Product> sampleProducts = [
     price: 8.24,
     rating: 4.9,
     deliveryMinutes: 26,
-    imageUrl:
-        'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400',
+    imageUrl: 'assets/images/cheeseburger.png',
     category: 'Combos',
   ),
   Product(
@@ -21,19 +20,18 @@ final List<Product> sampleProducts = [
     price: 9.99,
     rating: 4.8,
     deliveryMinutes: 14,
-    imageUrl: 'https://images.unsplash.com/photo-1550317138-10000687a72b?w=400',
+    imageUrl: 'assets/images/veggie_burger.png',
     category: 'Sliders',
   ),
   Product(
     id: '3',
     name: 'Hamburger Chicken Burger',
     description:
-        'Our chicken burger is a delicious and healthier alternative to traditional beef burgers, perfect for those looking for a lighter meal option.',
+        'Our chicken burger is a delicious and healthier alternative to traditional beef burgers, perfect for those looking for a lighter meal option. Try it today and experience the mouth-watering flavors of our Hamburger Chicken Burger!',
     price: 12.48,
-    rating: 4.8,
+    rating: 4.6,
     deliveryMinutes: 42,
-    imageUrl:
-        'https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=400',
+    imageUrl: 'assets/images/chicken_burger.png',
     category: 'Combos',
   ),
   Product(
@@ -44,19 +42,7 @@ final List<Product> sampleProducts = [
     price: 26.99,
     rating: 4.5,
     deliveryMinutes: 14,
-    imageUrl:
-        'https://images.unsplash.com/photo-1585238342024-78d387f4a707?w=400',
-    category: 'Clásic',
-  ),
-  Product(
-    id: '5',
-    name: 'Hamburger Veggie Burger',
-    description:
-        'Customize your burger to your tastes. Ultimate experience with fresh ingredients and your favorite toppings.',
-    price: 16.49,
-    rating: 4.6,
-    deliveryMinutes: 20,
-    imageUrl: 'https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=400',
-    category: 'Sliders',
+    imageUrl: 'assets/images/fried_chicken_burger.png',
+    category: 'Classic',
   ),
 ];
