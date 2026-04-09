@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import '../../providers/cart_provider.dart';
 import '../../theme/app_theme.dart';
 
@@ -133,7 +132,7 @@ class CartScreen extends ConsumerWidget {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
+            color: Colors.black.withOpacity(0.06),
             blurRadius: 16,
             offset: const Offset(0, -4),
           ),
@@ -167,7 +166,7 @@ class CartScreen extends ConsumerWidget {
           const SizedBox(width: 20),
           Expanded(
             child: GestureDetector(
-              onTap: () => context.goNamed('payment'),
+              onTap: () => context.pushNamed('payment'),
               child: Container(
                 height: 54,
                 decoration: BoxDecoration(
@@ -195,9 +194,9 @@ class CartScreen extends ConsumerWidget {
   }
 }
 
-// ── CART ITEM CARD ───────────────────────────────────────
 class _CartItemCard extends ConsumerWidget {
   final CartItem item;
+
   const _CartItemCard({required this.item});
 
   @override
@@ -209,7 +208,7 @@ class _CartItemCard extends ConsumerWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
+            color: Colors.black.withOpacity(0.06),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -217,16 +216,14 @@ class _CartItemCard extends ConsumerWidget {
       ),
       child: Row(
         children: [
-          // Imagen
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: CachedNetworkImage(
-              imageUrl: item.product.imageUrl,
+            child: Image.asset(
+              item.product.imageUrl,
               width: 72,
               height: 72,
               fit: BoxFit.cover,
-              placeholder: (_, __) => Container(color: AppColors.surface),
-              errorWidget: (_, __, ___) => Container(
+              errorBuilder: (_, __, ___) => Container(
                 color: AppColors.surface,
                 child: const Icon(
                   Icons.lunch_dining,
@@ -236,8 +233,6 @@ class _CartItemCard extends ConsumerWidget {
             ),
           ),
           const SizedBox(width: 14),
-
-          // Info
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -266,8 +261,6 @@ class _CartItemCard extends ConsumerWidget {
               ],
             ),
           ),
-
-          // Controles de cantidad
           Column(
             children: [
               _qtyButton(
@@ -306,17 +299,17 @@ class _CartItemCard extends ConsumerWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 30,
-        height: 30,
+        width: 28,
+        height: 28,
         decoration: BoxDecoration(
           color: filled ? AppColors.primary : Colors.white,
           borderRadius: BorderRadius.circular(8),
-          border: filled ? null : Border.all(color: AppColors.primary),
+          border: filled ? null : Border.all(color: AppColors.divider),
         ),
         child: Icon(
           icon,
-          size: 15,
-          color: filled ? Colors.white : AppColors.primary,
+          size: 16,
+          color: filled ? Colors.white : AppColors.textPrimary,
         ),
       ),
     );

@@ -45,4 +45,15 @@ final List<Product> sampleProducts = [
     imageUrl: 'assets/images/fried_chicken_burger.png',
     category: 'Classic',
   ),
+  Product(
+    id: '5',
+    name: 'Hamburger Veggie Burger',
+    description:
+        'Customize your burger to your tastes. Ultimate experience with fresh ingredients and your favorite toppings.',
+    price: 16.49,
+    rating: 4.6,
+    deliveryMinutes: 20,
+    imageUrl: 'assets/images/product_detail.png',
+    category: 'Sliders',
+  ),
 ];

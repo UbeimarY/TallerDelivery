@@ -96,14 +96,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
             ],
           ),
-          Container(
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              image: const DecorationImage(
-                image: AssetImage('assets/images/image_8.png'),
-                fit: BoxFit.cover,
+          GestureDetector(
+            onTap: () => context.pushNamed('profile'),
+            child: Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                image: const DecorationImage(
+                  image: AssetImage('assets/images/image_8.png'),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ),
@@ -140,10 +143,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     color: AppColors.textHint,
                     fontSize: 15,
                   ),
-                  prefixIcon: const Icon(
-                    Icons.search,
-                    color: AppColors.textHint,
-                  ),
+                  prefixIcon: const Icon(Icons.search, color: AppColors.textHint),
                   border: InputBorder.none,
                   contentPadding: const EdgeInsets.symmetric(vertical: 15),
                 ),
@@ -236,43 +236,34 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 onPressed: () {},
               ),
               IconButton(
-                icon: const Icon(
-                  Icons.person_outline,
-                  color: Colors.white,
-                  size: 28,
-                ),
-                onPressed: () {},
+                icon: const Icon(Icons.person_outline, color: Colors.white, size: 28),
+                onPressed: () => context.pushNamed('profile'),
               ),
               const SizedBox(width: 40),
               IconButton(
-                icon: const Icon(
-                  Icons.access_time,
-                  color: Colors.white,
-                  size: 28,
-                ),
-                onPressed: () {},
+                icon: const Icon(Icons.access_time, color: Colors.white, size: 28),
+                onPressed: () => context.pushNamed('support'),
               ),
               IconButton(
-                icon: const Icon(
-                  Icons.favorite_border,
-                  color: Colors.white,
-                  size: 28,
-                ),
+                icon: const Icon(Icons.favorite_border, color: Colors.white, size: 28),
                 onPressed: () {},
               ),
             ],
           ),
           Positioned(
             top: -25,
-            child: Container(
-              width: 65,
-              height: 65,
-              decoration: BoxDecoration(
-                color: AppColors.primary,
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.white, width: 4),
+            child: GestureDetector(
+              onTap: () => context.pushNamed('cart'),
+              child: Container(
+                width: 65,
+                height: 65,
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white, width: 4),
+                ),
+                child: const Icon(Icons.shopping_cart, color: Colors.white, size: 30),
               ),
-              child: const Icon(Icons.add, color: Colors.white, size: 35),
             ),
           ),
         ],
