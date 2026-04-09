@@ -1,8 +1,8 @@
-
 import 'package:go_router/go_router.dart';
 import '../screens/splash/splash_screen.dart';
 import '../screens/home/home_screen.dart';
 import '../screens/product/product_detail_screen.dart';
+import '../screens/cart/cart_screen.dart';
 import '../screens/payment/payment_screen.dart';
 import '../screens/profile/profile_screen.dart';
 import '../screens/support/support_screen.dart';
@@ -31,6 +31,11 @@ class AppRouter {
         },
       ),
       GoRoute(
+        path: '/cart',
+        name: 'cart',
+        builder: (context, state) => const CartScreen(),
+      ),
+      GoRoute(
         path: '/payment',
         name: 'payment',
         builder: (context, state) => const PaymentScreen(),
@@ -46,7 +51,5 @@ class AppRouter {
         builder: (context, state) => const SupportScreen(),
       ),
     ],
-    // Transición global entre pantallas
-    observers: [],
   );
 }

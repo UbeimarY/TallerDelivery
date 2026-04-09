@@ -54,40 +54,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final cartItems = ref.watch(cartProvider);
-    final cartCount = cartItems.fold(0, (sum, item) => sum + item.quantity);
-
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
           children: [
-            // Header
-            _buildHeader(cartCount),
-
-            // Search bar
+            _buildHeader(),
             _buildSearchBar(),
-
-            // Categorías
             _buildCategories(),
-
-            // Grid de productos
             Expanded(child: _buildProductGrid()),
           ],
         ),
       ),
-
-      // Bottom nav
       bottomNavigationBar: _buildBottomNav(),
-
-      // FAB central
       floatingActionButton: _buildFAB(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
-  // ── HEADER ──────────────────────────────────────────────
-  Widget _buildHeader(int cartCount) {
+  Widget _buildHeader() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
       child: Row(
@@ -96,7 +81,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'Foodgo',
                   style: TextStyle(
                     fontFamily: 'Poppins',
@@ -105,7 +90,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     color: AppColors.textPrimary,
                   ),
                 ),
-                Text(
+                const Text(
                   'Order your favourite food!',
                   style: TextStyle(
                     fontFamily: 'Poppins',
@@ -116,20 +101,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ],
             ),
           ),
-
-          // Avatar usuario
-          Container(
-            width: 42,
-            height: 42,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: AppColors.surface,
-              border: Border.all(color: AppColors.divider),
-            ),
-            child: const Icon(
-              Icons.person,
-              color: AppColors.textSecondary,
-              size: 22,
+          GestureDetector(
+            onTap: () => context.goNamed('profile'),
+            child: Container(
+              width: 42,
+              height: 42,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.surface,
+                border: Border.all(color: AppColors.divider),
+              ),
+              child: const Icon(
+                Icons.person,
+                color: AppColors.textSecondary,
+                size: 22,
+              ),
             ),
           ),
         ],
@@ -137,7 +123,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  // ── SEARCH BAR ──────────────────────────────────────────
   Widget _buildSearchBar() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
@@ -165,8 +150,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
           ),
           const SizedBox(width: 12),
-
-          // Botón filtro
           Container(
             width: 48,
             height: 48,
@@ -185,7 +168,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  // ── CATEGORÍAS ──────────────────────────────────────────
   Widget _buildCategories() {
     return SizedBox(
       height: 44,
@@ -193,7 +175,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 20),
         itemCount: _categories.length,
-        separatorBuilder: (_, _) => const SizedBox(width: 8),
+        separatorBuilder: (_, __) => const SizedBox(width: 8),
         itemBuilder: (context, index) {
           final isSelected = _selectedCategory == index;
           return GestureDetector(
@@ -221,7 +203,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  // ── GRID PRODUCTOS ──────────────────────────────────────
   Widget _buildProductGrid() {
     final products = _filteredProducts;
 
@@ -232,7 +213,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           children: [
             const Icon(Icons.search_off, size: 64, color: AppColors.textHint),
             const SizedBox(height: 12),
-            Text(
+            const Text(
               'No se encontraron productos',
               style: TextStyle(
                 fontFamily: 'Poppins',
@@ -269,8 +250,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  // ── BOTTOM NAV ──────────────────────────────────────────
   Widget _buildBottomNav() {
+    final cartCount = ref.watch(cartItemCountProvider);
+
     return BottomAppBar(
       color: Colors.white,
       elevation: 8,
@@ -283,8 +265,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           children: [
             _navItem(Icons.home_rounded, 0),
             _navItem(Icons.person_outline_rounded, 1),
-            const SizedBox(width: 48), // espacio para el FAB
-            _navItem(Icons.receipt_long_outlined, 2),
+            const SizedBox(width: 48),
+            _navItemWithBadge(Icons.shopping_cart_outlined, 2, cartCount),
             _navItem(Icons.favorite_border_rounded, 3),
           ],
         ),
@@ -298,10 +280,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       onTap: () {
         setState(() => _selectedNav = index);
         if (index == 1) context.goNamed('profile');
-        if (index == 2) context.goNamed('support');
+        if (index == 3) context.goNamed('support');
       },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
+      child: Padding(
         padding: const EdgeInsets.all(8),
         child: Icon(
           icon,
@@ -312,10 +293,56 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  // ── FAB ─────────────────────────────────────────────────
+  Widget _navItemWithBadge(IconData icon, int index, int count) {
+    final isSelected = _selectedNav == index;
+    return GestureDetector(
+      onTap: () {
+        setState(() => _selectedNav = index);
+        context.goNamed('cart');
+      },
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Icon(
+              icon,
+              size: 26,
+              color: isSelected ? AppColors.primary : AppColors.textHint,
+            ),
+          ),
+          if (count > 0)
+            Positioned(
+              top: 2,
+              right: 2,
+              child: Container(
+                width: 18,
+                height: 18,
+                decoration: const BoxDecoration(
+                  color: AppColors.primary,
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Text(
+                    '$count',
+                    style: const TextStyle(
+                      fontFamily: 'Poppins',
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildFAB() {
     return FloatingActionButton(
-      onPressed: () {},
+      onPressed: () => context.goNamed('cart'),
       backgroundColor: AppColors.primary,
       elevation: 4,
       shape: const CircleBorder(),
