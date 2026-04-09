@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../models/product.dart';
 import '../../providers/cart_provider.dart';
+import '../../providers/favorites_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/quantity_selector.dart';
 import '../../widgets/spicy_slider.dart';
@@ -38,19 +39,8 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
     for (int i = 0; i < _quantity; i++) {
       ref.read(cartProvider.notifier).addItem(widget.product);
     }
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          '${widget.product.name} added to cart',
-          style: GoogleFonts.poppins(),
-        ),
-        backgroundColor: AppColors.dark,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        margin: const EdgeInsets.all(16),
-        duration: const Duration(seconds: 2),
-      ),
-    );
+    // Navigate to payment screen instead of showing snackbar
+    context.pushNamed('payment');
   }
 
   @override
@@ -79,6 +69,10 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
   }
 
   Widget _buildAppBar() {
+    final isFav = ref
+        .watch(favoritesProvider.notifier)
+        .isFavorite(widget.product.id);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Row(
@@ -88,9 +82,22 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
             icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
             onPressed: () => context.pop(),
           ),
-          IconButton(
-            icon: const Icon(Icons.search, color: AppColors.textPrimary),
-            onPressed: () {},
+          Row(
+            children: [
+              IconButton(
+                icon: Icon(
+                  isFav ? Icons.favorite : Icons.favorite_border,
+                  color: isFav ? AppColors.heart : AppColors.textPrimary,
+                ),
+                onPressed: () {
+                  ref.read(favoritesProvider.notifier).toggle(widget.product);
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.search, color: AppColors.textPrimary),
+                onPressed: () {},
+              ),
+            ],
           ),
         ],
       ),
@@ -170,7 +177,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                 flex: 1,
                 child: Image.asset(
                   widget.product.imageUrl,
-                  height: 220,
+                  height: 320, // Aumentado para la hamburguesa "explotada"
                   fit: BoxFit.contain,
                 ),
               ),
@@ -180,20 +187,30 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Customize Your Burger to Your Tastes. Ultimate Experience',
-                      style: GoogleFonts.poppins(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
+                    const SizedBox(height: 20),
+                    RichText(
+                      text: TextSpan(
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          color: AppColors.textPrimary,
+                        ),
+                        children: [
+                          const TextSpan(
+                            text: 'Customize ',
+                            style: TextStyle(fontWeight: FontWeight.w700),
+                          ),
+                          const TextSpan(
+                              text:
+                                  'Your Burger\nto Your Tastes. Ultimate\nExperience'),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 30),
                     SpicySlider(
                       value: _spicy,
                       onChanged: (val) => setState(() => _spicy = val),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 30),
                     QuantitySelector(
                       quantity: _quantity,
                       onIncrement: () => setState(() => _quantity++),
@@ -242,7 +259,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
         ),
         const SizedBox(height: 12),
         SizedBox(
-          height: 100,
+          height: 110,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -250,9 +267,8 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
             itemBuilder: (context, index) {
               final item = items[index];
               return Container(
-                width: 80,
-                margin: const EdgeInsets.only(right: 12),
-                padding: const EdgeInsets.all(8),
+                width: 85,
+                margin: const EdgeInsets.only(right: 12, bottom: 8),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(15),
@@ -265,33 +281,45 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                   ],
                 ),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Stack(
-                      alignment: Alignment.bottomRight,
-                      children: [
-                        Icon(item.icon, color: item.color, size: 30),
-                        Container(
-                          padding: const EdgeInsets.all(2),
-                          decoration: const BoxDecoration(
-                            color: AppColors.primary,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.add,
-                            color: Colors.white,
-                            size: 10,
-                          ),
-                        ),
-                      ],
+                    Expanded(
+                      child: Center(
+                        child: Icon(item.icon, color: item.color, size: 35),
+                      ),
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      item.label,
-                      style: GoogleFonts.poppins(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.textPrimary,
+                    Container(
+                      height: 35,
+                      width: double.infinity,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF3C2F2F), // Marrón oscuro del diseño
+                        borderRadius:
+                            BorderRadius.vertical(bottom: Radius.circular(15)),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              item.label,
+                              style: GoogleFonts.poppins(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: const BoxDecoration(
+                              color: AppColors.primary,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(Icons.add,
+                                color: Colors.white, size: 10),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -346,34 +374,53 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                   color: AppColors.textSecondary,
                 ),
               ),
-              Text(
-                '\$${(widget.product.price * _quantity).toStringAsFixed(2)}',
-                style: GoogleFonts.poppins(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.textPrimary,
-                ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '\$',
+                    style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.primary,
+                    ),
+                  ),
+                  Text(
+                    (widget.product.price * _quantity).toStringAsFixed(2),
+                    style: GoogleFonts.poppins(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-          const SizedBox(width: 30),
-          Expanded(
-            child: GestureDetector(
-              onTap: _addToCart,
-              child: Container(
-                height: 60,
-                decoration: BoxDecoration(
-                  color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  'ORDER NOW',
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
+          const Spacer(),
+          GestureDetector(
+            onTap: _addToCart,
+            child: Container(
+              height: 60,
+              width: 180,
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.primary.withValues(alpha: 0.3),
+                    blurRadius: 15,
+                    offset: const Offset(0, 8),
                   ),
+                ],
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                'ORDER NOW',
+                style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
                 ),
               ),
             ),

@@ -6,6 +6,7 @@ import '../screens/cart/cart_screen.dart';
 import '../screens/payment/payment_screen.dart';
 import '../screens/profile/profile_screen.dart';
 import '../screens/support/support_screen.dart';
+import '../screens/favorites/favorites_screen.dart';
 import '../models/product.dart';
 
 class AppRouter {
@@ -49,6 +50,11 @@ class AppRouter {
         path: '/support',
         name: 'support',
         builder: (context, state) => const SupportScreen(),
+      ),
+      GoRoute(
+        path: '/favorites',
+        name: 'favorites',
+        builder: (context, state) => const FavoritesScreen(),
       ),
     ],
   );

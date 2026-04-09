@@ -246,14 +246,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
               IconButton(
                 icon: const Icon(Icons.favorite_border, color: Colors.white, size: 28),
-                onPressed: () {},
+                onPressed: () => context.pushNamed('favorites'),
               ),
             ],
           ),
           Positioned(
             top: -25,
             child: GestureDetector(
-              onTap: () => context.pushNamed('cart'),
+              onTap: () {
+                final product5 = sampleProducts.firstWhere((p) => p.id == '5');
+                context.pushNamed('product', pathParameters: {'id': '5'}, extra: product5);
+              },
               child: Container(
                 width: 65,
                 height: 65,
@@ -261,8 +264,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   color: AppColors.primary,
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.white, width: 4),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.primary.withOpacity(0.3),
+                      blurRadius: 10,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
                 ),
-                child: const Icon(Icons.shopping_cart, color: Colors.white, size: 30),
+                child: const Icon(Icons.add, color: Colors.white, size: 35),
               ),
             ),
           ),
